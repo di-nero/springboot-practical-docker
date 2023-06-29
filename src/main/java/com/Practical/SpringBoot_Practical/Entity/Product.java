@@ -1,7 +1,7 @@
 package com.Practical.SpringBoot_Practical.Entity;
 
 
-import com.Practical.SpringBoot_Practical.Dto.ProductDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,11 +31,6 @@ public class Product {
         this.price = product.getPrice();
     }
 
-    public Product(ProductDto productDto){
-        this.name = productDto.getName();
-        this.description = productDto.getDescription();
-        this.price = productDto.getPrice();
-    }
 
     public Product() {
     }

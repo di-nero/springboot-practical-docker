@@ -10,11 +10,7 @@ public class ProductDto {
 
     private Double price;
 
-    public ProductDto(Product product) {
-        this.name = product.getName();
-        this.description = product.getDescription();
-        this.price = product.getPrice();
-    }
+
 
     public ProductDto() {
     }
