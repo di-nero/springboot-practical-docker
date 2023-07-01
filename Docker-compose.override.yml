@@ -1,0 +1,21 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+      - type: bind
+        source: ./target
+        target: /app/target
+      - type: bind
+        source: ./pom.xml
+        target: /app/pom.xml
+      - maven_cache:/root/.m2
+    environment:
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+
+volumes:
+  maven_cache:
