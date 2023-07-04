@@ -9,9 +9,9 @@ public class ProductMapper {
 
     public ProductDto toProductDto(Product product){
         ProductDto productDto = new ProductDto();
-        productDto.setName(productDto.getName());
+        productDto.setName(product.getName());
         productDto.setDescription(product.getDescription());
-        productDto.setPrice(productDto.getPrice());
+        productDto.setPrice(product.getPrice());
 
         return productDto;
     }
@@ -20,7 +20,7 @@ public class ProductMapper {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setDescription(productDto.getDescription());
-        product.setPrice(product.getPrice());
+        product.setPrice(productDto.getPrice());
 
         return product;
     }

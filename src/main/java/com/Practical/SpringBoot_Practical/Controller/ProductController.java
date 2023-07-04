@@ -30,6 +30,11 @@ public class ProductController {
        return productService.GetProductByIdService(id);
     }
 
+    @PutMapping("/{id}")
+    public ProductDto updateProduct(@RequestBody ProductDto productDto , @PathVariable Long id){
+        return productService.updateProductService(productDto , id);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id){
         productService.deleteProductService(id);

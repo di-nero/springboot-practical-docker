@@ -1,13 +1,18 @@
 package com.Practical.SpringBoot_Practical.Dto;
 
 import com.Practical.SpringBoot_Practical.Entity.Product;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class ProductDto {
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String description;
 
+    @NotNull
     private Double price;
 
 

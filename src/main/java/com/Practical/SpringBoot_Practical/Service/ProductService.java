@@ -1,6 +1,7 @@
 package com.Practical.SpringBoot_Practical.Service;
 
 import com.Practical.SpringBoot_Practical.Dto.ProductDto;
+import com.Practical.SpringBoot_Practical.Entity.Product;
 import com.Practical.SpringBoot_Practical.Mapper.ProductMapper;
 import com.Practical.SpringBoot_Practical.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,12 @@ public class ProductService {
     public ProductDto GetProductByIdService(Long  id){
         var result = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product not found"));
         return productMapper.toProductDto(result);
+    }
+
+    public ProductDto updateProductService(ProductDto productDto , Long id){
+
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product by id: " + id + " not found"));
+        return productMapper.toProductDto(productRepository.save(product));
     }
 
     public void deleteProductService(Long id){

@@ -10,7 +10,8 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - backend
+      - public
+      - private
 
   postgres:
     image: postgres:15-alpine
@@ -24,7 +25,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - backend
+      - private    # only app can reach postgres
 
   nginx:
     image: nginx:alpine
@@ -35,11 +36,14 @@ services:
     depends_on:
       - app
     networks:
-      - backend
+      - public     # nginx only on public network
 
 volumes:
   postgres_data:
 
 networks:
-  backend:
+  public:
     driver: bridge
+  private:
+    driver: bridge
+    internal: true   # no internet access from this network
