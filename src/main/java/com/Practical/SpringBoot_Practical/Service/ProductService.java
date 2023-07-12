@@ -33,7 +33,6 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
-    // CREATE
     @CachePut(value = "product", key = "#result.id")
     @CacheEvict(value = "allProducts", allEntries = true)
     public ProductDto createProductService(ProductDto productDto) {
@@ -44,7 +43,6 @@ public class ProductService {
         return productMapper.toProductDto(savedProduct);
     }
 
-    // GET ALL
     @Cacheable(value = "allProducts")
     public List<ProductDto> getAllProductService() {
 
@@ -54,7 +52,6 @@ public class ProductService {
                 .toList();
     }
 
-    // GET BY ID
     @Cacheable(value = "product", key = "#id")
     public ProductDto getProductByIdService(Long id) {
 
@@ -64,7 +61,6 @@ public class ProductService {
         return productMapper.toProductDto(product);
     }
 
-    // UPDATE
     @CachePut(value = "product", key = "#id")
     @CacheEvict(value = "allProducts", allEntries = true)
     public ProductDto updateProductService(ProductDto productDto, Long id) {
@@ -81,7 +77,6 @@ public class ProductService {
         return productMapper.toProductDto(updated);
     }
 
-    // DELETE
     @Caching(evict = {
             @CacheEvict(value = "product", key = "#id"),
             @CacheEvict(value = "allProducts", allEntries = true)
