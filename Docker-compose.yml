@@ -1,5 +1,16 @@
 services:
 
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - private
   app:
     build: .
     ports:
@@ -8,6 +19,8 @@ services:
       - .env
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - public
@@ -40,6 +53,7 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   public:
