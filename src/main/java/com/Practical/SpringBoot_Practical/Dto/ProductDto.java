@@ -4,7 +4,11 @@ import com.Practical.SpringBoot_Practical.Entity.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class ProductDto {
+import java.io.Serializable;
+
+public class ProductDto implements Serializable {
+
+    private Long id;
 
     @NotBlank
     private String name;
@@ -18,6 +22,14 @@ public class ProductDto {
 
 
     public ProductDto() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

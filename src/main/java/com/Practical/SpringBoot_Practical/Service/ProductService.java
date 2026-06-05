@@ -1,50 +1,96 @@
 package com.Practical.SpringBoot_Practical.Service;
 
+
+
 import com.Practical.SpringBoot_Practical.Dto.ProductDto;
+
 import com.Practical.SpringBoot_Practical.Entity.Product;
+
 import com.Practical.SpringBoot_Practical.Mapper.ProductMapper;
+
 import com.Practical.SpringBoot_Practical.Repository.ProductRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.cache.annotation.CacheEvict;
+
+import org.springframework.cache.annotation.CachePut;
+
+import org.springframework.cache.annotation.Cacheable;
+
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 
 @Service
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
     @Autowired
     private ProductMapper productMapper;
 
-    public ProductDto createProductService(ProductDto productDto){
+    // CREATE
+    @CachePut(value = "product", key = "#result.id")
+    @CacheEvict(value = "allProducts", allEntries = true)
+    public ProductDto createProductService(ProductDto productDto) {
 
-        var product = productMapper.toProductEntity(productDto);
+        Product product = productMapper.toProductEntity(productDto);
+        Product savedProduct = productRepository.save(product);
 
-        return productMapper.toProductDto(productRepository.save(product));
+        return productMapper.toProductDto(savedProduct);
     }
 
-    public List<ProductDto> getAllProductService(){
-        return productRepository
-                .findAll()
+    // GET ALL
+    @Cacheable(value = "allProducts")
+    public List<ProductDto> getAllProductService() {
+
+        return productRepository.findAll()
                 .stream()
-                .map(student -> productMapper.toProductDto(student))
+                .map(productMapper::toProductDto)
                 .toList();
     }
 
-    public ProductDto GetProductByIdService(Long  id){
-        var result = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product not found"));
-        return productMapper.toProductDto(result);
+    // GET BY ID
+    @Cacheable(value = "product", key = "#id")
+    public ProductDto getProductByIdService(Long id) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("product not found"));
+
+        return productMapper.toProductDto(product);
     }
 
-    public ProductDto updateProductService(ProductDto productDto , Long id){
+    // UPDATE
+    @CachePut(value = "product", key = "#id")
+    @CacheEvict(value = "allProducts", allEntries = true)
+    public ProductDto updateProductService(ProductDto productDto, Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product by id: " + id + " not found"));
-        return productMapper.toProductDto(productRepository.save(product));
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("product not found"));
+
+        product.setName(productDto.getName());
+        product.setPrice(productDto.getPrice());
+        product.setDescription(productDto.getDescription());
+
+        Product updated = productRepository.save(product);
+
+        return productMapper.toProductDto(updated);
     }
 
-    public void deleteProductService(Long id){
-        var product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("product not found"));
+    // DELETE
+    @Caching(evict = {
+            @CacheEvict(value = "product", key = "#id"),
+            @CacheEvict(value = "allProducts", allEntries = true)
+    })
+    public void deleteProductService(Long id) {
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("product not found"));
+
         productRepository.delete(product);
     }
 }
